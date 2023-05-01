@@ -13,7 +13,7 @@ class Konsultan extends Model
         'no_hp',
         'alamat',
         'desc_konsultan',
-        'fotoprofile',
+        'foto_profile',
     ];
 
     protected $hidden = [];

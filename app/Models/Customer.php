@@ -15,7 +15,7 @@ class Customer extends Model
         'no_hp',
         'alamat',
         'tanggal_lahir',
-        'fotoprofile',
+        'foto_profile',
     ];
 
     protected $hidden = [];

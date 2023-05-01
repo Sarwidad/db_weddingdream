@@ -16,7 +16,8 @@ class ProdukController extends Controller
         $produks = Produk::latest()->paginate(10);
 
         //return collection of produks$produks$produks as a resource
-        return new ProdukResource(true, 'List Data Talents', $produks);
+        // return new ProdukResource(true, 'List Data produks', $produks);
+        return response()->json(["List data produk", $produks],200);
     }
 
     public function store(Request $request)
@@ -29,7 +30,7 @@ class ProdukController extends Controller
             'foto_produk'=>'required',
             'rating'=>'required',
             'ulasan'=>'required',
-            
+
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -46,16 +47,16 @@ class ProdukController extends Controller
             'ulasan'=>$request->ulasan,
         ]);
 
-        return new ProdukResource(true, 'Data Produk Berhasil Ditambahkan!', $produk);
+        return response()->json(["Data berhasil ditambahkan", $produk],200);
     }
 
     public function show($id)
     {
         $produk = Produk::find($id);
         if (is_null($produk)) {
-            return response()->json('Data not found', 404); 
+            return response()->json('Data tidak ditemukan', 404);
         }
-        return new ProdukResource(true, 'Data Produk Ditemukan!', $produk);
+        return response()->json(["Data berhasil ditemukan", $produk],200);
     }
 
     public function update(Request $request, Produk $produk)
@@ -68,7 +69,7 @@ class ProdukController extends Controller
             'foto_produk'=>'required',
             'rating'=>'required',
             'ulasan'=>'required',
-            
+
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -84,12 +85,12 @@ class ProdukController extends Controller
             'ulasan'=>$request->ulasan,
         ]);
 
-        return new ProdukResource(true, 'Data Produk Berhasil Diubah!', $produk);
+        return response()->json(["Data berhasil diubah", $produk],200);
     }
 
     public function destroy(Produk $produk)
     {
         $produk->delete();
-        return new ProdukResource(true, 'Data Produk Berhasil Dihapus!', null);
+        return response()->json("Data berhasil dihapus",200);
     }
 }

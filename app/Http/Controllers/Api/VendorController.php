@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\VendorResource;
+// use App\Http\Resources\VendorResource;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +16,9 @@ class VendorController extends Controller
         $vendors = Vendor::latest()->paginate(10);
 
         //return collection of vendors$vendors as a resource
-        return new VendorResource(true, 'List Data Vendors', $vendors);
+        // return new VendorResource(true, 'List Data Vendors', $vendors);
+
+        return response()->json(['List data vendor', $vendors],200);
     }
 
     public function store(Request $request)
@@ -51,16 +53,16 @@ class VendorController extends Controller
             'fotoprofile'=>$request->fotoprofile
         ]);
 
-        return new VendorResource(true, 'Data Vendor Berhasil Ditambahkan!', $vendor);
+        return response()->json(['Data vendor berhasil ditambah!', $vendor]);
     }
 
     public function show($id)
     {
         $vendor = Vendor::find($id);
         if (is_null($vendor)) {
-            return response()->json('Data not found', 404); 
+            return response()->json('Data not found', 404);
         }
-        return new VendorResource(true, 'Data Vendor Ditemukan!', $vendor);
+        return response()->json(['Data vendor berhasil ditemukan!', $vendor]);
     }
 
     public function update(Request $request, Vendor $vendor)
@@ -76,7 +78,7 @@ class VendorController extends Controller
             'rating_vendor'=>'required',
             'galeri_vendor'=>'required',
             'fotoprofile'=>'required'
-            
+
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -95,12 +97,12 @@ class VendorController extends Controller
             'fotoprofile'=>$request->fotoprofile
         ]);
 
-        return new VendorResource(true, 'Data Vendor Berhasil Diubah!', $vendor);
+        return response()->json(['Data vendor berhasil diubah!', $vendor]);
     }
 
     public function destroy(Vendor $vendor)
     {
         $vendor->delete();
-        return new VendorResource(true, 'Data Vendor Berhasil Dihapus!', null);
+        return response()->json('Data vendor berhasil dihapus!');
     }
 }
