@@ -16,9 +16,7 @@ class KonsultanController extends Controller
         $konsultans = Konsultan::latest()->paginate(10);
 
         //return collection of konsultans as a resource
-        // return new KonsultanResource(true, 'List Data Konsultans', $konsultans);
-
-        return response()->json(["List data konsultan", $konsultans],200);
+        return new KonsultanResource(true, 'List Data Konsultans', $konsultans);
     }
 
     public function store(Request $request)
@@ -28,8 +26,8 @@ class KonsultanController extends Controller
             'no_hp'=>'required',
             'alamat'=>'required',
             'desc_konsultan'=>'required',
-            'foto_profile'=>'required'
-
+            'fotoprofile'=>'required'
+            
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -41,19 +39,19 @@ class KonsultanController extends Controller
             'no_hp'=>$request->no_hp,
             'alamat'=>$request->alamat,
             'desc_konsultan'=>$request->desc_konsultan,
-            'foto_profile'=>$request->foto_profile
+            'fotoprofile'=>$request->fotoprofile
         ]);
 
-        return response()->json(["Data berhasil ditambahkan", $konsultan],200);
+        return new KonsultanResource(true, 'Data Konsultan Berhasil Ditambahkan!', $konsultan);
     }
 
     public function show($id)
     {
         $konsultan = Konsultan::find($id);
         if (is_null($konsultan)) {
-            return response()->json('Data not found', 404);
+            return response()->json('Data not found', 404); 
         }
-        return response()->json(["Data berhasil ditemukan", $konsultan],200);
+        return new KonsultanResource(true, 'Data Konsultan Ditemukan!', $konsultan);
     }
 
     public function update(Request $request, Konsultan $konsultan)
@@ -63,8 +61,8 @@ class KonsultanController extends Controller
             'no_hp'=>'required',
             'alamat'=>'required',
             'desc_konsultan'=>'required',
-            'foto_profile'=>'required'
-
+            'fotoprofile'=>'required'
+            
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -75,15 +73,15 @@ class KonsultanController extends Controller
             'no_hp'=>$request->no_hp,
             'alamat'=>$request->alamat,
             'desc_konsultan'=>$request->desc_konsultan,
-            'foto_profile'=>$request->foto_profile
+            'fotoprofile'=>$request->fotoprofile
         ]);
 
-        return response()->json(["Data berhasil diubah", $konsultan],200);
+        return new KonsultanResource(true, 'Data Konsultan Berhasil Diubah!', $konsultan);
     }
 
     public function destroy(Konsultan $konsultan)
     {
         $konsultan->delete();
-        return response()->json("Data berhasil dihapus",200);
+        return new KonsultanResource(true, 'Data Konsultan Berhasil Dihapus!', null);
     }
 }

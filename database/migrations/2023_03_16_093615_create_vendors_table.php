@@ -18,12 +18,12 @@ return new class extends Migration
             $table->string('alamat', 255);
             $table->string('nama_vendor', 255);
             $table->string('desc_vendor', 255);
-            $table->integer('range_harga');
-            $table->integer('kontak_vendor');
+            $table->string('range_harga', 255);
+            $table->string('kontak_vendor', 255);
             $table->integer('rating_vendor');
-            $table->binary('galeri_vendor');
-            $table->binary('fotoprofile');
-            $table->dateTime('jadwal_vendor');
+            $table->string('galeri_vendor')->nullable();
+            $table->string('fotoprofile')->nullable();
+            $table->dateTime('jadwal_vendor')->nullable();
             $table->timestamps();
         });
     }

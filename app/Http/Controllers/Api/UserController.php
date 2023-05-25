@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\CustomerController;
 use App\Http\Resources\UserResource;
+use App\Models\Customer;
 use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -23,91 +26,231 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username'=>'required',
-            'email'=>'required',
-            'password'=>'required',
-            'role'=>'required'
+            'email' => 'required',
+            'name' => 'required',
+            'username' => 'required',
+            'password' => 'required',
+            'role' => 'required'
 
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
-        $user =User::create([
-            'id_user'=>$request->id_user,
-            'username'=>$request->username,
-            'email'=>$request->email,
-            'password'=>$request->password,
-            'role'=>$request->role
-        ]);
-
-        // return new UserResource(true, 'Data User Berhasil Ditambahkan!', $user);
+        $user = new User();
+        $user->email = $request->email;
+        $user->name = $request->name;
+        $user->username = $request->username;
+        $user->password = Hash::make($request->password);
+        $user->role = $request->role;
+        $user->save();
+        if ($user->role == "vendor" && !is_null($user->id)) {
+            $vendor = VendorController::store($request, $user->id);
+            if (!is_null($vendor)) {
+                $user = array_merge(
+                    $user->toArray(),
+                    $vendor->toArray(),
+                );
+            } else {
+                return response()->json("Data vendor tidak terbuat", 404);
+            }
+        } else
+        if ($user->role == "customer" && !is_null($user->id)) {
+            $customer = CustomerController::store($request, $user->id);
+            if (!is_null($customer)) {
+                $user = array_merge(
+                    $user->toArray(),
+                    $customer->toArray(),
+                );
+            } else {
+                return response()->json("Data Customer tidak terbuat", 404);
+            }
+        }
         return response()->json($user, 200);
+
+
+        // return response($response, 200);
+
+
+        // UserResource(true, 'Data User Berhasil Ditambahkan!', $user);
+
     }
 
     public function show($id)
     {
         $user = User::find($id);
         if (is_null($user)) {
-            return response()->json('Data user tidak ditemukan!', 404);
-        }else{
+            return response()->json('Data tidak ditemukan!', 404);
+        }
+        if ($user->role = "vendor") {
+            $vendor = Vendor::where("user_id", $user->id)->first();
+            if (!is_null($vendor)) {
+                $user = array_merge(
+                    $user->toArray(),
+                    $vendor->toArray(),
+                );
+            }
+        }
+        if ($user->role = "customer") {
+            $customer = Customer::where("user_id", $user->id)->first();
+            if (!is_null($customer)) {
+                $user = array_merge(
+                    $user->toArray(),
+                    $customer->toArray(),
+                );
+            }
+        }
         return response()->json($user, 200);
     }
-    }
-
-    public function logins(Request $request)
-    {
-        // $input = $request->all();
-
-        $this->validate($request, [
-            'email' => 'required',
-            'password' => 'required',
-        ]);
-    $user = DB::table('users')->where('email', $request->email)->where('password', $request->password)->get();
-
-if(is_null($user)) {
-    return response()->json('user tidak ditemukan! '. $request->email.$request->password, 404);
-}
-    return response()->json($user[0],200);
-
-        // $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-        // if(auth()->attempt(array($fieldType => $input['username'], 'password' => $input['password'])))
-        // {
-            // return redirect()->route('home');
-        // }else{
-            // return redirect()->route('login')
-            //     ->with('error','Email-Address And Password Are Wrong.');
-        // }
-
-    }
-
-    public function update(Request $request, User $user)
+    public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username'=>'required',
-            'email'=>'required',
-            'password'=>'required',
-            'role'=>'required'
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:6',
+        ]);
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+        $user = User::where('email', $request->email)->first();
 
+        if (is_null($user)) {
+            $response = ["message" => 'User does not exist'];
+            return response($response, 422);
+        } else {
+            if ($user->role = 'vendor') {
+                $vendor = Vendor::where("user_id", $user->id)->first();
+
+                if (!is_null($vendor)) {
+                    $user = array_merge(
+                        $user->toArray(),
+                        $vendor->toArray(),
+                    );
+                }
+            }
+            if ($user->role = 'customer') {
+                $customer = Customer::where("user_id", $user->id)->first();
+
+                if (!is_null($customer)) {
+                    $user = array_merge(
+                        $user->toArray(),
+                        $customer->toArray(),
+                    );
+                }
+            }
+            if (Hash::check($request->password, $user['password'])) {
+                // $token = $user['token']->createToken('Laravel Password Grant Client')->accessToken;
+                // $user = array_merge(
+                //     $user,
+                //     $vendor->toArray(),
+                // ["token" => $token]
+                // );
+
+                if (!is_null($vendor)) {
+                    $user = array_merge(
+                        $user->toArray(),
+                        $vendor->toArray(),
+                    );
+                }
+                return response($user, 200);
+            } else {
+                $response = ["message" => "Password salah!"];
+                return response($response, 422);
+            }
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+            'name' => 'required',
+
+            // 'username' => 'required',
+            // 'password' => 'required',
+            // 'role' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+        $user = User::find($id);
 
-        $user->User::update([
-            'username'=>$request->username,
-            'email'=>$request->email,
-            'password'=>$request->password,
-            'role'=>$request->role
-        ]);
 
-        // return new UserResource(true, 'Data User Berhasil Diubah!', $user);
-        return response()->json(["Data user berhasil diubah!",$user], 200);
+        if (is_null($user)) {
+            return response()->json("Data tidak ditemukan!", 200);
+        }
+        $user->email = $request->email;
+        if (!is_null($request->name))     $user->name = $request->name;
+        if (!is_null($request->username))   $user->username = $request->username;
+        if (!is_null($request->password))   $user->password = Hash::make($request->password);
+        if (!is_null($request->role)) $user->role = $request->role;
+        $user->save();
+        if ($user->role == "vendor") {
+            $validator = Validator::make($request->all(), [
+                // 'user_id' => 'required',
+                'no_hp' => 'required',
+                'alamat' => 'required',
+                'nama_vendor' => 'required',
+                'desc_vendor' => 'required',
+                'range_harga' => 'required',
+                'kontak_vendor' => 'required',
+                // 'galeri_vendor' => 'required',
+                // 'fotoprofile' => 'required'
+
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+            $vendor = VendorController::show($user->id);
+
+            if (is_null($vendor)) {
+            } else {
+                VendorController::update($request, $user->id);
+                $vendor = VendorController::show($user->id);
+                if (!is_null($vendor)) {
+                    $user = array_merge(
+                        $user->toArray(),
+                        $vendor->toArray()
+                    );
+                }
+            }
+        }
+        if ($user->role == "customer") {
+            $validator = Validator::make($request->all(), [
+                // 'user_id' => 'required',
+                'no_hp' => 'required',
+                'alamat' => 'required',
+                'tanggal_lahir' => 'required',
+                'fotoprofile' => 'file|image|mimes:jpeg,png,jpg'
+                // 'fotoprofile' => 'required'
+
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+            $customer = CustomerController::show($user->id);
+
+            if (is_null($customer)) {
+            } else {
+                CustomerController::update($request, $user->id);
+                $customer = CustomerController::show($user->id);
+                if (!is_null($customer)) {
+                    $user = array_merge(
+                        $user->toArray(),
+                        $customer->toArray()
+                    );
+                }
+            }
+        }
+
+
+        return response()->json($user, 200);
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return response()->json("Data user berhasil dihapus!", 200);
+        // return new UserResource(true, 'Data User Berhasil Dihapus!', null);
+        return response()->json('Data User berhasil dihapus!', 200);
     }
 }

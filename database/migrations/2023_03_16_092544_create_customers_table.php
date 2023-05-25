@@ -18,9 +18,9 @@ return new class extends Migration
             // $table->foreign('user_id')->references('id')->on('users');
             $table->foreignId('user_id')->constrained();
             $table->string('no_hp', 15);
-            $table->string('alamat', 255);
-            $table->string('tanggal_lahir', 255);
-            $table->binary('fotoprofile');
+            $table->string('alamat', 255)->nullable();
+            $table->string('tanggal_lahir', 255)->nullable();
+            $table->string('fotoprofile')->nullable();
             $table->timestamps();
         });
     }

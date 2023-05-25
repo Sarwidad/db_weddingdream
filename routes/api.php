@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\api\ProdukController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,19 +23,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('customers', App\Http\Controllers\Api\CustomerController::class);
 
-
 // Route::apiResource('users', App\Http\Controllers\Api\UserController::class);
-Route::post('users/create', [UserController::class, "store"]);
-Route::get('users/{id}', [UserController::class, "show"]);
-Route::post('users/logins', [UserController::class, "logins"]);
-
+Route::get("/users", [UserController::class, 'index']);
+Route::post("/users/create", [UserController::class, 'store']);
+Route::post("/users/login", [UserController::class, 'login']);
+Route::put("/users/{id}", [UserController::class, 'update']);
+Route::get("/users/get/{id}", [UserController::class, 'show']);
 Route::apiResource('vendors', App\Http\Controllers\Api\VendorController::class);
 
 Route::apiResource('konsultans', App\Http\Controllers\Api\KonsultanController::class);
 
 Route::apiResource('talents', App\Http\Controllers\Api\TalentController::class);
 
-Route::apiResource('produks', App\Http\Controllers\Api\ProdukController::class);
+// Route::apiResource('produks', App\Http\Controllers\Api\ProdukController::class);
+Route::post("/produks/create", [ProdukController::class, 'store']);
+Route::put("/produks/{id}", [ProdukController::class, 'update']);
+Route::get("/produks/get/{id}", [ProdukController::class, 'show']);
+Route::get("/produks", [ProdukController::class, 'index']);
+Route::get("/produks-by-vendor/{vendor_id}", [ProdukController::class, 'myIndex']);
+Route::delete("/produks/{id}", [ProdukController::class, 'destroy']);
 
 
 // Route::get('/customers', CustomerController::class);
