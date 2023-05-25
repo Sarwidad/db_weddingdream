@@ -8,9 +8,9 @@
                 <div class="card-header pb-0">
                     <div class="d-flex flex-row justify-content-between">
                         <div>
-                            <h5 class="mb-0">Data Customer</h5>
+                            <h5 class="mb-0">Data Konsultan</h5>
                         </div>
-                        <a  href="{{ route('customers.create') }}" class="btn btn-primary btn-sm mb-0 {{ (Request::is('customers.create') ? 'active' : '') }}" type="button">+&nbsp; Tambah Akun</a>
+                        <a  href="{{ route('konsultans.create') }}" class="btn btn-primary btn-sm mb-0 {{ (Request::is('konsultans.create') ? 'active' : '') }}" type="button">+&nbsp; Tambah Akun</a>
                     </div>
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
@@ -22,7 +22,7 @@
                                         ID
                                     </th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                        Profil
+                                        Photo
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Nama
@@ -42,10 +42,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach ($customers as $customer)
+                            @foreach ($konsultans as $konsultan)
                                 <tr>
                                     <td class="ps-4">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $customer->id }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $konsultan->id }}</p>
                                     </td>
                                     <td>
                                         <div>
@@ -53,29 +53,23 @@
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $customer->name }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $konsultan->name }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $customer->email }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $konsultan->email }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $customer->role}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $konsultan->role}}</p>
                                     </td>
                                     <td class="text-center">
-                                        <span class="text-secondary text-xs font-weight-bold">{{ $customer->created_at}}</span>
+                                        <span class="text-secondary text-xs font-weight-bold">{{ $konsultan->created_at}}</span>
                                     </td>
                                     <td class="text-center">
-                                        
-                                        <a href="{{ route('customers.show', $customer->id) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit customer">
+                                        <a href="{{ route('konsultans.show', $konsultan->id) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit Konsultan">
                                             <i class="fas fa-user-edit text-secondary"></i>
                                         </a>
                                         <span>
-                                        <!-- <a href="{{ route('customers.destroy', $customer->id)}}" method="POST" onclick="return confirm('Apakah Anda Yakin Menghapus Data?');" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Hapus">
-                                            @csrf
-                                            @method('DELETE')
-                                            <i class="cursor-pointer fas fa-trash text-secondaryy"></i>
-                                        </a> -->
-                                        <form action="{{ route('customers.destroy', $customer->id) }}" method="POST" onclick="return confirm('Apakah Anda Yakin Menghapus Data?');" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Hapus">
+                                        <form action="{{ route('konsultans.destroy', $konsultan->id) }}" method="POST" onclick="return confirm('Apakah Anda Yakin Menghapus Data?');" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Hapus">
                                             @csrf
                                             @method('DELETE')
                                             <button style="border:none;outline:none;color:white;background-color:white;" type="submit" class="cursor-pointer fas fa-trash text-secondary"></button>

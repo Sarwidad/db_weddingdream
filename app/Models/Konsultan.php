@@ -13,8 +13,13 @@ class Konsultan extends Model
         'no_hp',
         'alamat',
         'desc_konsultan',
-        'foto_profile',
+        'fotoprofile',
     ];
 
     protected $hidden = [];
+    protected $table = 'konsultans'; 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

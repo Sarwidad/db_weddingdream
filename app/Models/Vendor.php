@@ -22,4 +22,9 @@ class Vendor extends Model
     ];
 
     protected $hidden = [];
+    protected $table = 'vendors'; 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

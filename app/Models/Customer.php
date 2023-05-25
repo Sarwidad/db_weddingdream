@@ -15,8 +15,12 @@ class Customer extends Model
         'no_hp',
         'alamat',
         'tanggal_lahir',
-        'foto_profile',
+        'fotoprofile',
     ];
 
     protected $hidden = [];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
