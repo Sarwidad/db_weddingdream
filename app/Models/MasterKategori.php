@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MasterKategori extends Model
 {
     use HasFactory;
+
+
+    protected $table = 'master_kategori';
 }
