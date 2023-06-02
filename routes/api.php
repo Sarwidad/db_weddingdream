@@ -50,9 +50,9 @@ Route::delete("/produks/{id}", [ProdukController::class, 'destroy']);
 
 Route::post("/talents/create", [TalentController::class, 'store']);
 Route::post("/customers", [CustomerController::class, 'index']);
-Route::post("/master/bidang", [MasterController::class, 'bidang']);
-Route::post("/master/kategori", [MasterController::class, 'kategori']);
-Route::post("/master/profesi", [MasterController::class, 'profesi']);
+Route::get("/master/bidang", [MasterController::class, 'bidang']);
+Route::get("/master/kategori", [MasterController::class, 'kategori']);
+Route::get("/master/profesi", [MasterController::class, 'profesi']);
 Route::post("/customers/{user_id}", [CustomerController::class, 'show']);
 
 Route::post("/open-talent/create", [OpenTalentController::class, 'store']);
