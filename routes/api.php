@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\api\ProdukController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\OpenTalentController;
+use App\Http\Controllers\Api\TalentController;
+use App\Http\Controllers\MasterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +46,22 @@ Route::get("/produks/get/{id}", [ProdukController::class, 'show']);
 Route::get("/produks", [ProdukController::class, 'index']);
 Route::get("/produks-by-vendor/{vendor_id}", [ProdukController::class, 'myIndex']);
 Route::delete("/produks/{id}", [ProdukController::class, 'destroy']);
+
+
+Route::post("/talents/create", [TalentController::class, 'store']);
+Route::post("/customers", [CustomerController::class, 'index']);
+Route::post("/master/bidang", [MasterController::class, 'bidang']);
+Route::post("/master/kategori", [MasterController::class, 'kategori']);
+Route::post("/master/profesi", [MasterController::class, 'profesi']);
+Route::post("/customers/{user_id}", [CustomerController::class, 'show']);
+
+Route::post("/open-talent/create", [OpenTalentController::class, 'store']);
+Route::put("/open-talent/{id}", [OpenTalentController::class, 'update']);
+Route::get("/open-talent/get/{id}", [OpenTalentController::class, 'show']);
+Route::get("/open-talent", [OpenTalentController::class, 'index']);
+Route::get("/open-talent-by-vendor/{vendor_id}", [OpenTalentController::class, 'myVendorIndex']);
+Route::get("/open-talent-by-talent/{talent_id}", [OpenTalentController::class, 'myTalentIndex']);
+Route::delete("/open-talent/{id}", [OpenTalentController::class, 'destroy']);
 
 
 // Route::get('/customers', CustomerController::class);

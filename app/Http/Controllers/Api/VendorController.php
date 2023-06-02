@@ -86,7 +86,7 @@ class VendorController extends Controller
         if ($validator->fails()) {
             return null;
         }
-        $vendor = Vendor::where($user_id, "user_id")->first();
+        $vendor = Vendor::where("user_id", $user_id)->first();
 
         if (is_null($vendor)) {
             return null;

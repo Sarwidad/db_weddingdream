@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\CustomerController;
-use App\Http\Resources\UserResource;
 use App\Models\Customer;
 use App\Models\User;
 use App\Models\Vendor;
@@ -91,11 +90,12 @@ class UserController extends Controller
             }
         }
         if ($user->role = "customer") {
-            $customer = Customer::where("user_id", $user->id)->first();
+            // $customer = Customer::where("user_id", $user->id)->first();
+            $customer = CustomerController::show($user->id);
             if (!is_null($customer)) {
                 $user = array_merge(
                     $user->toArray(),
-                    $customer->toArray(),
+                    $customer,
                 );
             }
         }
@@ -127,7 +127,7 @@ class UserController extends Controller
                 }
             }
             if ($user->role = 'customer') {
-                $customer = Customer::where("user_id", $user->id)->first();
+                $customer = CustomerController::show($user->id);
 
                 if (!is_null($customer)) {
                     $user = array_merge(
@@ -149,6 +149,14 @@ class UserController extends Controller
                         $user->toArray(),
                         $vendor->toArray(),
                     );
+                } else
+            if (!is_null($customer)) {
+                    if (!is_null($customer)) {
+                        $user = array_merge(
+                            $user->toArray(),
+                            $customer->toArray(),
+                        );
+                    }
                 }
                 return response($user, 200);
             } else {
@@ -163,7 +171,6 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required',
             'name' => 'required',
-
             // 'username' => 'required',
             // 'password' => 'required',
             // 'role' => 'required'
@@ -202,8 +209,7 @@ class UserController extends Controller
             }
             $vendor = VendorController::show($user->id);
 
-            if (is_null($vendor)) {
-            } else {
+            if (!is_null($vendor)) {
                 VendorController::update($request, $user->id);
                 $vendor = VendorController::show($user->id);
                 if (!is_null($vendor)) {
@@ -216,13 +222,10 @@ class UserController extends Controller
         }
         if ($user->role == "customer") {
             $validator = Validator::make($request->all(), [
-                // 'user_id' => 'required',
                 'no_hp' => 'required',
                 'alamat' => 'required',
                 'tanggal_lahir' => 'required',
                 'fotoprofile' => 'file|image|mimes:jpeg,png,jpg'
-                // 'fotoprofile' => 'required'
-
             ]);
 
             if ($validator->fails()) {
@@ -230,8 +233,7 @@ class UserController extends Controller
             }
             $customer = CustomerController::show($user->id);
 
-            if (is_null($customer)) {
-            } else {
+            if (!is_null($customer)) {
                 CustomerController::update($request, $user->id);
                 $customer = CustomerController::show($user->id);
                 if (!is_null($customer)) {

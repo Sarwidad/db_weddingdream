@@ -20,15 +20,10 @@ class ProdukController extends Controller
     }
     public function myIndex($vendor_id)
     {
-        //get posts
         $produks = Produk::where("vendor_id", $vendor_id)->latest()->paginate(10);
         if (is_null($produks)) {
             return response()->json("Data kosong!", 402);
         }
-
-
-        //return collection of produks$produks$produks as a resource
-        // return new ProdukResource(true, 'List Data Talents', $produks);
         return response()->json($produks, 200);
     }
 

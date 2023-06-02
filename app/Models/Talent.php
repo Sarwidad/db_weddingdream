@@ -15,4 +15,14 @@ class Talent extends Model
     ];
 
     protected $hidden = [];
+
+    public function customer()
+    {
+        return $this->hasOne(Customer::class);
+    }
+
+    public function openTalent()
+    {
+        return $this->belongsToMany(OpenTalent::class, 'talent_open_talents', 'talent_id', 'open_talents_id');
+    }
 }

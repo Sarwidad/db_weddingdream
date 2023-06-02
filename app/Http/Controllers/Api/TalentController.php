@@ -25,7 +25,7 @@ class TalentController extends Controller
             'customer_id'=>'required',
             'profesi'=>'required',
             'range_harga'=>'required'
-            
+
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -34,7 +34,7 @@ class TalentController extends Controller
         $talent =Talent::create([
             'id_talent'=>$request->id_talent,
             'customer_id'=>$request->customer_id,
-            'profesi'=>$request->profesi,
+             'profesi'=>$request->profesi,
             'range_harga'=>$request->range_harga
         ]);
 
@@ -45,7 +45,7 @@ class TalentController extends Controller
     {
         $talent = Talent::find($id);
         if (is_null($talent)) {
-            return response()->json('Data not found', 404); 
+            return response()->json('Data not found', 404);
         }
         return new TalentResource(true, 'Data Talent Ditemukan!', $talent);
     }
@@ -56,7 +56,6 @@ class TalentController extends Controller
             'customer_id'=>'required',
             'profesi'=>'required',
             'range_harga'=>'required'
-            
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
