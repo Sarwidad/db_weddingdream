@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\MasterBidang;
 use App\Models\MasterKategori;
 use App\Models\MasterProfesi;
@@ -11,19 +12,19 @@ class MasterController extends Controller
 {
     public function kategori()
     {
-        $kategori = MasterKategori::latest();
+        $kategori = MasterKategori::latest()->get();
         return $kategori;
     }
 
     public function bidang()
     {
-        $bidang = MasterBidang::latest();
+        $bidang = MasterBidang::latest()->get();
         return $bidang;
     }
 
     public function profesi()
     {
-        $profesi = MasterProfesi::latest();
+        $profesi = MasterProfesi::latest()->get();
         return $profesi;
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\OpenTalentController;
 use App\Http\Controllers\Api\TalentController;
-use App\Http\Controllers\MasterController;
+use App\Http\Controllers\Api\MasterController;
 
 /*
 |--------------------------------------------------------------------------
